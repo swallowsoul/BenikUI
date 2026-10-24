@@ -29,12 +29,12 @@ function mod:styleElvUIPlugins()
 		local LP = SLE:GetModule('LocationPanel')
 
 		local sleFrames = {
-			_G.SLE_BG_1,
-			_G.SLE_BG_2,
-			_G.SLE_BG_3,
-			_G.SLE_BG_4,
-			_G.SLE_RaidMarkerBar,
-			_G.SLE_SquareMinimapButtonBar,
+--			_G.SLE_BG_1,
+--			_G.SLE_BG_2,
+--			_G.SLE_BG_3,
+--			_G.SLE_BG_4,
+--			_G.SLE_RaidMarkerBar,
+--			_G.SLE_SquareMinimapButtonBar,
 			_G.SLE_LocationPanel,
 			_G.SLE_LocationPanel_X,
 			_G.SLE_LocationPanel_Y,
@@ -55,14 +55,21 @@ function mod:styleElvUIPlugins()
 			_G.SLE_LocationPanel_Y.style:SetFrameLevel(3)
 		end
 
+		-- fix tooltip overlap
+		hooksecurefunc(LP, "PopulateDropdown", function()
+			_G.SLE_LocationPanel_RightClickMenu1:ClearAllPoints()
+			_G.SLE_LocationPanel_RightClickMenu1:Point('TOP', _G.SLE_LocationPanel, 'BOTTOM', 0, -7)
+			_G.SLE_LocationPanel_RightClickMenu2:ClearAllPoints()
+			_G.SLE_LocationPanel_RightClickMenu2:Point('TOP', _G.SLE_LocationPanel, 'BOTTOM', 0, -7)
+		end)
+
 		-- fix shadow overlap
 		if E.db.benikui.general.shadows then
 			_G.SLE_LocationPanel_X:Point('RIGHT', _G.SLE_LocationPanel, 'LEFT', -2, 0)
 			_G.SLE_LocationPanel_Y:Point('LEFT', _G.SLE_LocationPanel, 'RIGHT', 2, 0)
-			hooksecurefunc(LP, "PopulateDropdown", function()
-				_G.SLE_LocationPanel_RightClickMenu1:ClearAllPoints()
-				_G.SLE_LocationPanel_RightClickMenu1:Point('TOP', _G.SLE_LocationPanel, 'BOTTOM', 0, -6)
-			end)
+		else
+			_G.SLE_LocationPanel_X:Point('RIGHT', _G.SLE_LocationPanel, 'LEFT', -1, 0)
+			_G.SLE_LocationPanel_Y:Point('LEFT', _G.SLE_LocationPanel, 'RIGHT', 1, 0)
 		end
 	end
 
@@ -172,9 +179,6 @@ function mod:StyleWindTools()
 		end
 
 		WTDamageMeterLayout.backdrop:BuiStyle()
-		if E.db.benikui.general.shadows then
-			WTDamageMeterLayout.backdrop:CreateStyleShadow()
-		end
 	end)
 end
 S:AddCallbackForAddon("ElvUI_WindTools", "BenikUI_WindTools", mod.StyleWindTools)
